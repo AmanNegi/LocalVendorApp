@@ -6,7 +6,6 @@ import 'package:local_vendor_app/data/configs.dart';
 import 'package:local_vendor_app/data/shared_prefs.dart';
 import 'package:local_vendor_app/pages/auth.dart';
 import 'package:local_vendor_app/pages/home_page.dart';
-import 'package:local_vendor_app/pages/tabs_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -3,8 +3,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:local_vendor_app/data/configs.dart';
 import 'package:local_vendor_app/data/shared_prefs.dart';
 
-Color accentColor = Colors.deepPurple;
-Color secondaryColor = const Color(0xFFfeebe4);
+Color accentColor = const Color(0xFFA091FB);
+Color bgColor = const Color(0xFFCFC7FD);
+
 showToast(String msg) {
   Fluttertoast.showToast(msg: msg);
 }

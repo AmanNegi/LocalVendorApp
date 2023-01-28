@@ -58,6 +58,7 @@ class AuthService {
           email: email,
           isOwner: email == configs.value['ownerEmail'],
           orders: [],
+          cart: []
         ),
       );
 

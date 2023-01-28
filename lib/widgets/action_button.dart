@@ -27,7 +27,7 @@ class _ActionButtonState extends State<ActionButton> {
     width = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      onTap: () {},
+      onTap: () => widget.onPressed(),
       child: Container(
         height: 0.06 * height,
         width: double.infinity,

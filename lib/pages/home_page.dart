@@ -8,8 +8,9 @@ import 'package:local_vendor_app/data/cloud_database.dart';
 import 'package:local_vendor_app/data/configs.dart';
 import 'package:local_vendor_app/globals.dart';
 import 'package:local_vendor_app/models/shop_item.dart';
+import 'package:local_vendor_app/pages/add_item_page.dart';
+import 'package:local_vendor_app/widgets/drawer.dart';
 import 'package:local_vendor_app/widgets/grid_item.dart';
-import 'package:uuid/uuid.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,19 +21,38 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late double height, width;
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      
+      key: _key,
+      drawer: const DrawerWidget(),
       floatingActionButton: isOwner() ? _getFAB() : null,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 0.05 * height),
+              SizedBox(height: 0.01 * height),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      _key.currentState!.openDrawer();
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Image.asset(
+                        "assets/images/drawer.png",
+                        height: 60,
+                        width: 30,
+                      ),
+                    ),
+                  )
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: Column(
@@ -56,16 +76,25 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               StreamBuilder<QuerySnapshot>(
-                stream: cloudDatabase.getItems(),
+                stream: cloudDatabase.itemsCollection
+                    .snapshots(includeMetadataChanges: true),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     if (snapshot.data != null) {
+                      print(
+                          "We have new Data ${snapshot.data!.docs.map((e) => e.id).toList()}");
                       List<QueryDocumentSnapshot> list = snapshot.data!.docs;
 
                       return _getGridView(list);
                     }
                   }
-                  return const Center(child: CircularProgressIndicator());
+                  return Center(
+                    child: Image.asset(
+                      "assets/images/loading.gif",
+                      height: 100,
+                      width: 100,
+                    ),
+                  );
                 },
               ),
             ],
@@ -77,19 +106,13 @@ class _HomePageState extends State<HomePage> {
 
   FloatingActionButton _getFAB() {
     return FloatingActionButton(
+      backgroundColor: accentColor,
       child: const Icon(Icons.add),
-      onPressed: () {
-        // Take to add item page
-        cloudDatabase.addItem(
-          ShopItem(
-              price: 250,
-              description: "Description",
-              itemId: const Uuid().v1(),
-              itemName: "Name",
-              image:
-                  "https://firebasestorage.googleapis.com/v0/b/local-vendor-app.appspot.com/o/noodles.png?alt=media&token=101f135a-7e2c-4dd0-96e2-4458479f6df3",
-              listedAt: DateTime.now()),
-        );
+      onPressed: () async {
+        await goToPage(context, const AddItemPage());
+        setState(() {});
+
+        // );
       },
     );
   }

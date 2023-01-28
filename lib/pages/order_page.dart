@@ -3,21 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:local_vendor_app/data/cloud_database.dart';
 import 'package:local_vendor_app/data/shared_prefs.dart';
 import 'package:local_vendor_app/globals.dart';
-import 'package:local_vendor_app/models/cart_item.dart';
 import 'package:local_vendor_app/models/shop_user.dart';
+import 'package:local_vendor_app/models/user_order.dart';
 import 'package:local_vendor_app/widgets/action_button.dart';
-import 'package:local_vendor_app/widgets/cart_item_widget.dart';
 
-class CartPage extends StatefulWidget {
-  const CartPage({super.key});
+class OrderPage extends StatefulWidget {
+  const OrderPage({super.key});
 
   @override
-  State<CartPage> createState() => _CartPageState();
+  State<OrderPage> createState() => _OrderPageState();
 }
 
-class _CartPageState extends State<CartPage> {
-  double total = 0;
-
+class _OrderPageState extends State<OrderPage> {
   @override
   void initState() {
     super.initState();
@@ -42,7 +39,7 @@ class _CartPageState extends State<CartPage> {
         elevation: 0,
         centerTitle: true,
         title: const Text(
-          "Your cart",
+          "Your Orders",
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -52,20 +49,16 @@ class _CartPageState extends State<CartPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data != null) {
-              List<CartItem> data = ShopUser.fromJson(
+              List<UserOrder> data = ShopUser.fromJson(
                       snapshot.data!.data() as Map<String, dynamic>)
-                  .cart;
-              total = 0;
+                  .orders;
 
               if (data.isEmpty) {
                 return const Center(
-                  child: Text("Your cart is empty."),
+                  child: Text("Your have no orders."),
                 );
               }
 
-              for (var e in data) {
-                total = total + ((e.amount) * (e.item.price));
-              }
               return Stack(
                 children: [
                   Positioned.fill(
@@ -79,13 +72,16 @@ class _CartPageState extends State<CartPage> {
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: data.length,
                         itemBuilder: (context, index) {
-                          return CartItemWidget(
-                            item: data[index],
-                            updateAmount: (e) {
-                              // data[index].amount = e;
-                              // setState(() {});
-                            },
+                          return Container(
+                            color: Colors.red,
                           );
+                          // return CartItemWidget(
+                          //   item: data[index],
+                          //   updateAmount: (e) {
+                          //     // data[index].amount = e;
+                          //     // setState(() {});
+                          //   },
+                          // );
                         },
                       ),
                     ),
@@ -134,7 +130,7 @@ class _CartPageState extends State<CartPage> {
                   const Text("Total:"),
                   const Spacer(),
                   Text(
-                    "₹ $total",
+                    "₹ 345",
                     style: TextStyle(
                       color: accentColor,
                       fontWeight: FontWeight.w600,

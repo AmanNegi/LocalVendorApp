@@ -35,7 +35,7 @@ class ShopItem {
         itemName: map["itemName"],
         listedAt: DateTime.fromMicrosecondsSinceEpoch(map["listedAt"]),
         description: map["description"],
-        price: map["price"]);
+        price: (map["price"] * 1.0));
   }
   factory ShopItem.fromSnapshot(DocumentSnapshot data) {
     ShopItem value = ShopItem.fromJson(data.data() as Map<String, dynamic>);

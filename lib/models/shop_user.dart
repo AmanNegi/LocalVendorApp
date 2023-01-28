@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:local_vendor_app/models/cart_item.dart';
+import 'package:local_vendor_app/models/shop_item.dart';
 import 'package:local_vendor_app/models/user_order.dart';
 
 /*
@@ -10,6 +12,7 @@ class ShopUser {
   String email;
   bool isOwner;
   List<UserOrder> orders;
+  List<CartItem> cart;
 
   ShopUser({
     required this.userId,
@@ -17,6 +20,7 @@ class ShopUser {
     required this.email,
     required this.isOwner,
     required this.orders,
+    required this.cart,
   });
 
   Map<String, dynamic> toJson() {
@@ -25,7 +29,8 @@ class ShopUser {
       "name": name,
       "email": email,
       "isOwner": isOwner,
-      "orders": orders
+      "orders": orders,
+      "cart": cart,
     };
   }
 
@@ -36,6 +41,9 @@ class ShopUser {
       isOwner: map["isOwner"],
       orders: (map["orders"] as List<dynamic>)
           .map((e) => UserOrder.fromJson(e))
+          .toList(),
+      cart: (map["cart"] as List<dynamic>)
+          .map((e) => CartItem.fromJson(e))
           .toList(),
       userId: map["userId"] ?? " ",
     );

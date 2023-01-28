@@ -18,14 +18,17 @@ class _TabsPageState extends State<TabsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(color: Colors.white, boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 5.0,
-            spreadRadius: 3.0,
-            offset: const Offset(0.0, -5.0),
-          )
-        ]),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 5.0,
+              spreadRadius: 3.0,
+              offset: const Offset(0.0, -5.0),
+            )
+          ],
+        ),
         height: kToolbarHeight,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
