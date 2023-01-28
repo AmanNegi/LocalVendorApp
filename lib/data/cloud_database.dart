@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:local_vendor_app/globals.dart';
+import 'package:local_vendor_app/models/shop_item.dart';
 import 'package:local_vendor_app/models/shop_user.dart';
 
 class CloudDataBase {
@@ -12,6 +13,7 @@ class CloudDataBase {
   // The items a particular vendor is willing to offer
   late CollectionReference itemsCollection = globalInstance.collection("items");
 
+// User Related Functions
   Future<bool> addUser(ShopUser user) async {
     try {
       await userCollection.doc(user.userId).set(user.toJson());
@@ -33,6 +35,26 @@ class CloudDataBase {
 
     return user;
   }
+
+// Items Related Functions
+  Future<bool> addItem(ShopItem item) async {
+    try {
+      await itemsCollection.doc(item.itemId).set(item.toJson());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Stream<QuerySnapshot> getItems() {
+    return itemsCollection.snapshots();
+  }
+
+Future<void> placeOrder(ShopItem item)async{
+
 }
+
+}
+
 
 CloudDataBase cloudDatabase = CloudDataBase();

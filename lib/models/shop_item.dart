@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ShopItem {
@@ -32,10 +30,10 @@ class ShopItem {
 
   factory ShopItem.fromJson(Map<String, dynamic> map) {
     return ShopItem(
-        itemId: map["userId"],
+        itemId: map["itemId"],
         image: map["image"],
-        itemName: map["productName"],
-        listedAt: DateTime.fromMicrosecondsSinceEpoch(map["orderedAt"]),
+        itemName: map["itemName"],
+        listedAt: DateTime.fromMicrosecondsSinceEpoch(map["listedAt"]),
         description: map["description"],
         price: map["price"]);
   }

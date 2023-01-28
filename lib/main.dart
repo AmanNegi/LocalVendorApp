@@ -1,9 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:local_vendor_app/data/configs.dart';
 import 'package:local_vendor_app/data/shared_prefs.dart';
 import 'package:local_vendor_app/pages/auth.dart';
+import 'package:local_vendor_app/pages/home_page.dart';
+import 'package:local_vendor_app/pages/tabs_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,9 +28,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: configs.value['shopName'],
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepPurple,
+        fontFamily: GoogleFonts.poppins().fontFamily,
       ),
-      home: const AuthPage(),
+      home: appData.value.isLoggedIn ? const HomePage() : const AuthPage(),
     );
   }
 }
