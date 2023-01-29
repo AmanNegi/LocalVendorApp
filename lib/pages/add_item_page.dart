@@ -116,7 +116,7 @@ class AddItemPageState extends State<AddItemPage> {
                     },
                     child: Image.file(
                       File(imageUrl),
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                     ),
                   )
                 : ActionButton(

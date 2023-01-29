@@ -17,12 +17,9 @@ class AuthPage extends StatefulWidget {
 }
 
 class AuthPageState extends State<AuthPage> {
-  String email = "", password = "";
+  String email = "", password = "", userName = "";
   late double height, width;
-  bool isLogin = true;
-
-  AuthService authService = AuthService();
-
+  PageController controller = PageController(initialPage: 0);
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -57,84 +54,96 @@ class AuthPageState extends State<AuthPage> {
               child: SvgPicture.asset("assets/images/thread.svg"),
             ),
             Positioned.fill(
+              child: _getCard(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _getCard(BuildContext context) {
+    return PageView.builder(
+        controller: controller,
+        itemCount: 2,
+        itemBuilder: (context, index) {
+          return _getForm(context, index == 0);
+        });
+  }
+
+  _getForm(BuildContext context, bool isLogin) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Card(
+            elevation: 20,
+            shadowColor: Colors.white30,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Card(
-                      elevation: 20,
-                      shadowColor: Colors.white30,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text("Enter your credentials",
-                                style: TextStyle(
-                                  fontSize: 23,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                )),
-                            const SizedBox(height: 12),
-                            _buildTextField("Email", (e) => email = e.trim()),
-                            _buildTextField(
-                                "Password", (e) => password = e.trim()),
-                            const SizedBox(height: 20),
-                            ActionButton(
-                              onPressed: () async {
-                                if (isLogin) {
-                                  var res =
-                                      await authService.login(email, password);
-                                  if (res != null && mounted) {
-                                    goToPage(context, const HomePage());
-                                  }
-                                } else {
-                                  var res =
-                                      await authService.signUp(email, password);
-                                  if (res != null && mounted) {
-                                    goToPage(context, const HomePage());
-                                  }
-                                }
-                              },
-                              text: isLogin ? "Login" : "Signup",
-                            ),
-                            const SizedBox(height: 20),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() => isLogin = !isLogin);
-                              },
-                              child: RichText(
-                                text: TextSpan(
-                                    style: GoogleFonts.poppins(),
-                                    children: [
-                                      TextSpan(
-                                          text: isLogin
-                                              ? "Don't have an account?"
-                                              : "Already have an account?",
-                                          style: const TextStyle(
-                                              color: Colors.black)),
-                                      TextSpan(
-                                          text: isLogin
-                                              ? " Sign Up now"
-                                              : "Login",
-                                          style: TextStyle(color: accentColor))
-                                    ]),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  const Text("Enter your credentials",
+                      style: TextStyle(
+                        fontSize: 23,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w800,
+                      )),
+                  const SizedBox(height: 12),
+                  if (!isLogin)
+                    _buildTextField("Username", (e) => userName = e.trim()),
+                  _buildTextField("Email", (e) => email = e.trim()),
+                  _buildTextField("Password", (e) => password = e.trim()),
+                  const SizedBox(height: 20),
+                  ActionButton(
+                    onPressed: () async {
+                      if (isLogin) {
+                        var res = await authService.login(email, password);
+                        if (res != null && mounted) {
+                          goToPage(context, const HomePage());
+                        }
+                      } else {
+                        var res =
+                            await authService.signUp(userName, email, password);
+                        if (res != null && mounted) {
+                          goToPage(context, const HomePage());
+                        }
+                      }
+                    },
+                    text: isLogin ? "Login" : "Signup",
+                  ),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      controller.animateToPage(
+                        isLogin ? 1 : 0,
+                        duration: const Duration(seconds: 1),
+                        curve: Curves.fastOutSlowIn,
+                      );
+                    },
+                    child: RichText(
+                      text: TextSpan(style: GoogleFonts.poppins(), children: [
+                        TextSpan(
+                            text: isLogin
+                                ? "Don't have an account?"
+                                : "Already have an account?",
+                            style: const TextStyle(color: Colors.black)),
+                        TextSpan(
+                            text: isLogin ? " Sign Up" : " Login",
+                            style: TextStyle(color: accentColor))
+                      ]),
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:local_vendor_app/data/shared_prefs.dart';
 import 'package:local_vendor_app/globals.dart';
 import 'package:local_vendor_app/models/cart_item.dart';
+import 'package:local_vendor_app/models/message.dart';
 import 'package:local_vendor_app/models/shop_item.dart';
 import 'package:local_vendor_app/models/shop_user.dart';
+import 'package:local_vendor_app/models/user_order.dart';
 
 class CloudDataBase {
   final FirebaseFirestore globalInstance = FirebaseFirestore.instance;
@@ -14,6 +16,8 @@ class CloudDataBase {
   late CollectionReference userCollection = globalInstance.collection("users");
   // The items a particular vendor is willing to offer
   late CollectionReference itemsCollection = globalInstance.collection("items");
+  // Group Chat collection
+  late CollectionReference chatCollection = globalInstance.collection("chat");
 
 // User Related Functions
   Future<bool> addUser(ShopUser user) async {
@@ -37,6 +41,17 @@ class CloudDataBase {
 
     return user;
   }
+
+  Future<ShopUser?> getUserById(String id) async {
+    ShopUser? user;
+    QuerySnapshot data =
+        await userCollection.where("userId", isEqualTo: id).snapshots().first;
+
+    user = ShopUser.fromJson(data.docs.first.data() as Map<String, dynamic>);
+
+    return user;
+  }
+
 
 // Items Related Functions
   Future<bool> addItem(ShopItem item) async {
@@ -70,7 +85,10 @@ class CloudDataBase {
   Future<List<CartItem>> getCartItems() async {
     DocumentSnapshot data =
         await userCollection.doc(appData.value.userId).snapshots().first;
-    return ShopUser.fromSnapshot(data).cart;
+    return ShopUser.fromSnapshot(data)
+        .cart
+        .map((e) => CartItem.fromJson(e))
+        .toList();
   }
 
   Future<bool> addItemToCart(CartItem item) async {
@@ -84,6 +102,7 @@ class CloudDataBase {
           exists = true;
           if (item.amount == 0) {
             // If exists and amount is zero delete it
+            debugPrint("Removing Item");
             data.removeAt(i);
           } else {
             data[i].amount = item.amount;
@@ -96,14 +115,40 @@ class CloudDataBase {
       if (!exists) data.add(item);
       userCollection
           .doc(appData.value.userId)
-          .update({"cart": (data.map((e) => e.toJson()).toList())});
+          .update({"cart": data.map((e) => e.toJson()).toList()});
       return true;
     } catch (e) {
       return false;
     }
   }
 
-  Future<void> placeOrder(ShopItem item) async {}
+  Future<List<dynamic>> getAllOrders() async {
+    DocumentSnapshot data =
+        await userCollection.doc(appData.value.userId).snapshots().first;
+    return ShopUser.fromSnapshot(data).orders;
+  }
+
+  Future<void> placeOrder(UserOrder order) async {
+    List<dynamic> data = await getAllOrders();
+    data.add(order.toJson());
+    await userCollection.doc(appData.value.userId).update({
+      "orders": data,
+    });
+    showToast("Placed Order Successfully");
+    await clearCart();
+  }
+
+  Future<void> clearCart() async {
+    await userCollection.doc(appData.value.userId).update({"cart": []});
+  }
+
+  addChat(Message item) async {
+    await chatCollection.doc(item.messageId).set(item.toJson());
+  }
+
+  Stream<QuerySnapshot> getChatStream() {
+    return chatCollection.orderBy("listedAt", descending: true).snapshots();
+  }
 
   bool handleError(Function fun) {
     try {

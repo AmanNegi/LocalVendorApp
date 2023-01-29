@@ -2,11 +2,16 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:local_vendor_app/data/auth_service.dart';
 import 'package:local_vendor_app/data/configs.dart';
 import 'package:local_vendor_app/data/shared_prefs.dart';
 import 'package:local_vendor_app/globals.dart';
+import 'package:local_vendor_app/pages/auth.dart';
 import 'package:local_vendor_app/pages/cart_page.dart';
+import 'package:local_vendor_app/pages/message_page.dart';
 import 'package:local_vendor_app/pages/order_page.dart';
+import 'package:local_vendor_app/pages/qr_page.dart';
+import 'package:local_vendor_app/widgets/about_us.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -97,6 +102,25 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 
           _getListTile("Your Orders", MdiIcons.listStatus,
               () => goToPage(context, const OrderPage())),
+          _getListTile("Book a table", MdiIcons.tableChair, () {}),
+          _getListTile(
+              "App QR",
+              MdiIcons.qrcode,
+              () => goToPage(
+                    context,
+                    const QrPage(),
+                  )),
+          _getListTile("Support", MdiIcons.chatOutline, () {
+            goToPage(
+              context,
+              const MessagePage(),
+            );
+          }),
+
+          _getListTile("Logout", MdiIcons.logout, () {
+            authService.logOut();
+            goToPage(context, const AuthPage(), clearStack: true);
+          }),
 
           // _getListTile("My Orders", Icons.person_outline,
           //     () => goToPage(context, const EditProfilePage())),
@@ -107,9 +131,29 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           // goToPage(context, const WelcomePage(), clearStack: true);
           // }),
           _getListTile("About", Icons.info_outline, () {
-            // showDialog(
-            //     context: context, builder: (context) => const AboutUsDialog());
-          })
+            showDialog(
+                context: context, builder: (context) => const AboutUsDialog());
+          }),
+          const Spacer(),
+          Container(
+            height: 0.075 * getHeight(context),
+            color: Colors.black,
+            child: Center(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "Interested in Codebase?",
+                  style: TextStyle(color: Colors.white),
+                ),
+                SizedBox(width: 10),
+                Icon(
+                  MdiIcons.github,
+                  color: Colors.white,
+                ),
+              ],
+            )),
+          ),
         ],
       ),
     );

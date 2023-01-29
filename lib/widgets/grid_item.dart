@@ -106,6 +106,7 @@ class GridItem extends StatelessWidget {
                   item: item,
                   amount: 1,
                 ));
+                showToast("Added to cart");
               },
               child: Container(
                 width: 40,

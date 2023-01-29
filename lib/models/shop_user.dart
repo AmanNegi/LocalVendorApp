@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:local_vendor_app/models/cart_item.dart';
-import 'package:local_vendor_app/models/shop_item.dart';
 import 'package:local_vendor_app/models/user_order.dart';
 
 /*
@@ -11,8 +10,8 @@ class ShopUser {
   String name;
   String email;
   bool isOwner;
-  List<UserOrder> orders;
-  List<CartItem> cart;
+  List<dynamic> orders;
+  List<dynamic> cart;
 
   ShopUser({
     required this.userId,
@@ -36,18 +35,37 @@ class ShopUser {
 
   factory ShopUser.fromJson(Map<String, dynamic> map) {
     return ShopUser(
-      name: map["name"],
-      email: map["email"],
-      isOwner: map["isOwner"],
-      orders: (map["orders"] as List<dynamic>)
-          .map((e) => UserOrder.fromJson(e))
-          .toList(),
-      cart: (map["cart"] as List<dynamic>)
-          .map((e) => CartItem.fromJson(e))
-          .toList(),
-      userId: map["userId"] ?? " ",
+      name: map["name"] ?? "",
+      email: map["email"] ?? "",
+      isOwner: map["isOwner"] ?? false,
+      orders: (map["orders"]) ?? [],
+      cart: (map["cart"]) ?? [],
+      userId: map["userId"] ?? "",
     );
   }
+
+  List<CartItem> getUserCart(Map<String, dynamic> map) {
+    List<CartItem> userCart = [];
+    List<dynamic> list = map["cart"];
+    if (userCart.isEmpty) return userCart;
+
+    for (var e in list) {
+      userCart.add(CartItem.fromJson(e));
+    }
+    return userCart;
+  }
+
+  List<UserOrder> getUserOrders(Map<String, dynamic> map) {
+    List<UserOrder> userOrders = [];
+    List<dynamic> list = map["orders"];
+    if (orders.isEmpty) return userOrders;
+
+    for (var e in list) {
+      userOrders.add(UserOrder.fromJson(e));
+    }
+    return userOrders;
+  }
+
   factory ShopUser.fromSnapshot(DocumentSnapshot data) {
     ShopUser value = ShopUser.fromJson(data.data() as Map<String, dynamic>);
     value.userId = data.reference.id;

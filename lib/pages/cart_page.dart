@@ -5,8 +5,10 @@ import 'package:local_vendor_app/data/shared_prefs.dart';
 import 'package:local_vendor_app/globals.dart';
 import 'package:local_vendor_app/models/cart_item.dart';
 import 'package:local_vendor_app/models/shop_user.dart';
+import 'package:local_vendor_app/models/user_order.dart';
 import 'package:local_vendor_app/widgets/action_button.dart';
 import 'package:local_vendor_app/widgets/cart_item_widget.dart';
+import 'package:uuid/uuid.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -52,20 +54,23 @@ class _CartPageState extends State<CartPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data != null) {
-              List<CartItem> data = ShopUser.fromJson(
+              List<dynamic> jsonData = ShopUser.fromJson(
                       snapshot.data!.data() as Map<String, dynamic>)
                   .cart;
-              total = 0;
-
-              if (data.isEmpty) {
+              if (jsonData.isEmpty) {
                 return const Center(
                   child: Text("Your cart is empty."),
                 );
               }
 
-              for (var e in data) {
-                total = total + ((e.amount) * (e.item.price));
+              total = 0;
+              List<CartItem> data = [];
+              for (var e in jsonData) {
+                CartItem item = CartItem.fromJson(e);
+                data.add(item);
+                total = total + (item.amount * item.item.price);
               }
+
               return Stack(
                 children: [
                   Positioned.fill(
@@ -90,7 +95,7 @@ class _CartPageState extends State<CartPage> {
                       ),
                     ),
                   ),
-                  _getBottomBar(),
+                  _getBottomBar(data),
                 ],
               );
             }
@@ -107,7 +112,7 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  Positioned _getBottomBar() {
+  Positioned _getBottomBar(List<dynamic> data) {
     return Positioned(
       bottom: 0,
       left: 0,
@@ -149,7 +154,28 @@ class _CartPageState extends State<CartPage> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ActionButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    Set<String> images = {};
+                    Set<String> itemsId = {};
+
+                    for (var e in data) {
+                      images.add(e.item.image);
+                      itemsId.add(e.item.itemId);
+                    }
+
+                    UserOrder userOrder = UserOrder(
+                      orderId: const Uuid().v1(),
+                      userId: appData.value.userId,
+                      userName: appData.value.name,
+                      itemsId: itemsId.toList(),
+                      images: images.toList(),
+                      orderedAt: DateTime.now(),
+                      expectedBy: DateTime.now().add(const Duration(days: 2)),
+                    );
+
+                    await cloudDatabase.placeOrder(userOrder);
+                    Navigator.pop(context);
+                  },
                   text: "Place Order",
                 ),
               ),

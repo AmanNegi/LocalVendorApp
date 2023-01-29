@@ -1,5 +1,8 @@
 {
-  "shopName": "Local Vendor App",
-  "shopTagLine":"Good Food.\nFast Delivery",
-  "ownerEmail": "asterjoules@gmail.com"
+  "shopName": "Jayara's Shop",
+  "shopDescription": "Get Awesome Food Delivered to your home. Book your tables at the comfort of your house.",
+  "shopTagLine": "Good Food.\nFast Delivery",
+  "ownerEmail": "asterjoules@gmail.com",
+  "address": "Dehradun, Uttarakhand",
+  "apkAddress": "https://www.google.com"
 }

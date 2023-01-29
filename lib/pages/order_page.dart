@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+
 import 'package:flutter/material.dart';
 import 'package:local_vendor_app/data/cloud_database.dart';
 import 'package:local_vendor_app/data/shared_prefs.dart';
 import 'package:local_vendor_app/globals.dart';
 import 'package:local_vendor_app/models/shop_user.dart';
 import 'package:local_vendor_app/models/user_order.dart';
-import 'package:local_vendor_app/widgets/action_button.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -49,7 +50,7 @@ class _OrderPageState extends State<OrderPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data != null) {
-              List<UserOrder> data = ShopUser.fromJson(
+              List<dynamic> data = ShopUser.fromJson(
                       snapshot.data!.data() as Map<String, dynamic>)
                   .orders;
 
@@ -59,35 +60,77 @@ class _OrderPageState extends State<OrderPage> {
                 );
               }
 
-              return Stack(
-                children: [
-                  Positioned.fill(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.only(
-                        top: 10.0,
-                        bottom: 0.15 * getHeight(context),
+              List<UserOrder> orderList = [];
+              for (var e in data) {
+                orderList.add(UserOrder.fromJson(e));
+              }
+
+              return ListView.builder(
+                itemCount: orderList.length,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0, vertical: 10.0),
+                itemBuilder: (context, index) {
+                  return Container(
+                      margin: const EdgeInsets.only(bottom: 15.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 5.0,
+                            spreadRadius: 3.0,
+                            offset: const Offset(5.0, 5.0),
+                          )
+                        ],
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            color: Colors.red,
-                          );
-                          // return CartItemWidget(
-                          //   item: data[index],
-                          //   updateAmount: (e) {
-                          //     // data[index].amount = e;
-                          //     // setState(() {});
-                          //   },
-                          // );
-                        },
-                      ),
-                    ),
-                  ),
-                  _getBottomBar(),
-                ],
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0, vertical: 10.0),
+                      height: 0.25 * getHeight(context),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              "Order ID: ${orderList[index].orderId.substring(0, 15)}"),
+                          SizedBox(
+                            height: 0.15 * getHeight(context),
+                            width: double.infinity, // color: Colors.green,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: orderList[index].images.length,
+                              itemBuilder: (context, i) {
+                                return Container(
+                                  margin: const EdgeInsets.only(right: 8.0),
+                                  width: 0.2 * getWidth(context),
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      orderList[index].images[i],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              const Text("Expected By:"),
+                              const Spacer(),
+                              Text(
+                                DateFormat('dd-MM-y')
+                                    .format(orderList[index].expectedBy)
+                                    .toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: accentColor,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ));
+                },
               );
             }
           }
@@ -99,59 +142,6 @@ class _OrderPageState extends State<OrderPage> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Positioned _getBottomBar() {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 5.0,
-              spreadRadius: 3.0,
-              offset: const Offset(0.0, -5.0),
-            )
-          ],
-        ),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: Row(
-                children: [
-                  const Text("Total:"),
-                  const Spacer(),
-                  Text(
-                    "₹ 345",
-                    style: TextStyle(
-                      color: accentColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              // height: kToolbarHeight,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ActionButton(
-                  onPressed: () {},
-                  text: "Place Order",
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

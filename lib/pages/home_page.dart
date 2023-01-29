@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:local_vendor_app/data/cloud_database.dart';
 import 'package:local_vendor_app/data/configs.dart';
@@ -31,74 +32,101 @@ class _HomePageState extends State<HomePage> {
       drawer: const DrawerWidget(),
       floatingActionButton: isOwner() ? _getFAB() : null,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 0.01 * height),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      _key.currentState!.openDrawer();
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Image.asset(
-                        "assets/images/drawer.png",
-                        height: 60,
-                        width: 30,
-                      ),
-                    ),
-                  )
-                ],
+        child: Stack(
+          children: [
+            Positioned(
+              right: 0,
+              top: 0,
+              child: Transform.rotate(
+                angle: pi,
+                child: SvgPicture.asset(
+                  "assets/images/semicircle.svg",
+                  height: 0.2 * getHeight(context),
+                  color: bgColor,
+                ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            ),
+            Positioned(
+              left: 0,
+              bottom: 0,
+              child: SvgPicture.asset(
+                "assets/images/semicircle.svg",
+                height: 0.15 * getHeight(context),
+              ),
+            ),
+            Positioned.fill(
+              child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Welcome to ${configs.value['shopName']}",
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey,
+                    SizedBox(height: 0.01 * height),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _key.currentState!.openDrawer();
+                          },
+                          child: Container(
+                            margin:
+                                const EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Image.asset(
+                              "assets/images/drawer.png",
+                              height: 60,
+                              width: 30,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Welcome to ${configs.value['shopName']}",
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          Text(
+                            "Good Food.\nFast Delivery.",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontFamily: GoogleFonts.arvo().fontFamily,
+                              fontSize: 30,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      "Good Food.\nFast Delivery.",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontFamily: GoogleFonts.arvo().fontFamily,
-                        fontSize: 30,
-                      ),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: cloudDatabase.itemsCollection
+                          .snapshots(includeMetadataChanges: true),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (snapshot.data != null) {
+                            List<QueryDocumentSnapshot> list =
+                                snapshot.data!.docs;
+
+                            return _getGridView(list);
+                          }
+                        }
+                        return Center(
+                          child: Image.asset(
+                            "assets/images/loading.gif",
+                            height: 100,
+                            width: 100,
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
               ),
-              StreamBuilder<QuerySnapshot>(
-                stream: cloudDatabase.itemsCollection
-                    .snapshots(includeMetadataChanges: true),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data != null) {
-                      print(
-                          "We have new Data ${snapshot.data!.docs.map((e) => e.id).toList()}");
-                      List<QueryDocumentSnapshot> list = snapshot.data!.docs;
-
-                      return _getGridView(list);
-                    }
-                  }
-                  return Center(
-                    child: Image.asset(
-                      "assets/images/loading.gif",
-                      height: 100,
-                      width: 100,
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

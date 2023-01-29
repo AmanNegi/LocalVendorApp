@@ -41,7 +41,9 @@ dependencies:
   fluttertoast: ^8.1.2
   google_fonts: ^4.0.1
   image_picker: ^0.8.6+1
+  intl: ^0.17.0
   material_design_icons_flutter: ^6.0.7096
+  qr_flutter: ^4.0.0
   shared_preferences: ^2.0.17
   uuid: ^3.0.7
 

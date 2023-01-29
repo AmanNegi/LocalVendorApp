@@ -41,31 +41,29 @@ class AuthService {
     }
   }
 
-  Future<User?> signUp(String email, String password) async {
+  Future<User?> signUp(String username, String email, String password) async {
     try {
       //TODO:(AmanNegi) Validate incoming Input
       UserCredential result = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-
       //TODO:(AmanNegi) Add Email Verification
 
       String id = const Uuid().v1();
-      String name = "Name";
+
       await cloudDatabase.addUser(
         ShopUser(
-          userId: id,
-          name: name,
-          email: email,
-          isOwner: email == configs.value['ownerEmail'],
-          orders: [],
-          cart: []
-        ),
+            userId: id,
+            name: username,
+            email: email,
+            isOwner: email == configs.value['ownerEmail'],
+            orders: [],
+            cart: []),
       );
 
       await sharedPrefsHelper.updateUserToDevice(
         AppData(
             userId: id,
-            name: name,
+            name: username,
             isLoggedIn: true,
             isFirstTime: false,
             email: email),
@@ -79,4 +77,11 @@ class AuthService {
       return null;
     }
   }
+
+  logOut() {
+    sharedPrefsHelper.updateUserToDevice(AppData.empty());
+    _firebaseAuth.signOut();
+  }
 }
+
+AuthService authService = AuthService();

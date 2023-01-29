@@ -32,7 +32,7 @@ class _ActionButtonState extends State<ActionButton> {
         height: 0.06 * height,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: accentColor,
+          color: widget.fillColor ?? accentColor,
           borderRadius: BorderRadius.circular(30.0),
         ),
         child: Center(

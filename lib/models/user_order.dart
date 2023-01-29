@@ -3,18 +3,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserOrder {
   String orderId;
   String userId;
-  String productName;
   String userName;
   DateTime orderedAt;
   DateTime expectedBy;
 
+  List<dynamic> images;
+  List<dynamic> itemsId;
+
   UserOrder({
     required this.orderId,
     required this.userId,
-    required this.productName,
     required this.userName,
     required this.orderedAt,
     required this.expectedBy,
+    required this.images,
+    required this.itemsId,
   });
 
   Map<String, dynamic> toJson() {
@@ -22,7 +25,8 @@ class UserOrder {
       "userId": userId,
       "orderId": orderId,
       "userName": userName,
-      "productName": productName,
+      "images": images.map((e) => e.toString()).toList(),
+      "itemsId": itemsId.map((e) => e.toString()).toList(),
       "orderedAt": orderedAt.millisecondsSinceEpoch,
       "expectedBy": expectedBy.millisecondsSinceEpoch,
     };
@@ -33,7 +37,8 @@ class UserOrder {
       userId: map["userId"],
       orderId: map["orderId"],
       userName: map["userName"],
-      productName: map["productName"],
+      images: map["images"],
+      itemsId: map["itemsId"],
       orderedAt: DateTime.fromMicrosecondsSinceEpoch(map["orderedAt"]),
       expectedBy: DateTime.fromMicrosecondsSinceEpoch(map["expectedBy"]),
     );
@@ -46,6 +51,6 @@ class UserOrder {
 
   @override
   String toString() {
-    return "{-$userName $productName-}";
+    return "{-$userName $orderId }";
   }
 }
