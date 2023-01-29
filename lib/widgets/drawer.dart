@@ -29,7 +29,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       child: Column(
         children: [
           SizedBox(height: MediaQuery.of(context).padding.top),
-
           SizedBox(
             height: 0.2 * getHeight(context),
             width: double.infinity,
@@ -94,13 +93,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ],
             ),
           ),
-
           SizedBox(
             height: 0.025 * getHeight(context),
           ),
           _getListTile("Your Cart", MdiIcons.cart,
               () => goToPage(context, const CartPage())),
-
           _getListTile("Your Orders", MdiIcons.listStatus,
               () => goToPage(context, const OrderPage())),
           _getListTile("Book a table", MdiIcons.tableChair, () {}),
@@ -117,20 +114,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               const MessagePage(),
             );
           }),
-
           _getListTile("Logout", MdiIcons.logout, () {
             authService.logOut();
             goToPage(context, const AuthPage(), clearStack: true);
           }),
-
-          // _getListTile("My Orders", Icons.person_outline,
-          //     () => goToPage(context, const EditProfilePage())),
-          // _getListTile("Terms of use", Icons.gavel_outlined,
-          //     () => goToPage(context, const TermsOfUsePage())),
-          // _getListTile("Logout", Icons.logout_outlined, () async {
-          // await apiHelper.signOut();
-          // goToPage(context, const WelcomePage(), clearStack: true);
-          // }),
           _getListTile("About", Icons.info_outline, () {
             showDialog(
                 context: context, builder: (context) => const AboutUsDialog());

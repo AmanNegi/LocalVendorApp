@@ -26,7 +26,6 @@ class SharedPrefsHelper {
     await init();
     if (_instance!.containsKey('appData')) {
       String? data = _instance!.getString('appData');
-      debugPrint("Got User Data From Device $data");
       if (data != null && data.isNotEmpty) {
         Map session = json.decode(data);
         appData.value = AppData.fromJSON(session);

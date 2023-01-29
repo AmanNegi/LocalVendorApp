@@ -55,79 +55,81 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned.fill(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 0.01 * height),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            _key.currentState!.openDrawer();
-                          },
-                          child: Container(
-                            margin:
-                                const EdgeInsets.symmetric(horizontal: 15.0),
-                            child: Image.asset(
-                              "assets/images/drawer.png",
-                              height: 60,
-                              width: 30,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Welcome to ${configs.value['shopName']}",
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Text(
-                            "Good Food.\nFast Delivery.",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontFamily: GoogleFonts.arvo().fontFamily,
-                              fontSize: 30,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    StreamBuilder<QuerySnapshot>(
-                      stream: cloudDatabase.itemsCollection
-                          .snapshots(includeMetadataChanges: true),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          if (snapshot.data != null) {
-                            List<QueryDocumentSnapshot> list =
-                                snapshot.data!.docs;
-
-                            return _getGridView(list);
-                          }
-                        }
-                        return Center(
-                          child: Image.asset(
-                            "assets/images/loading.gif",
-                            height: 100,
-                            width: 100,
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              child: _getBody(),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  SingleChildScrollView _getBody() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 0.01 * height),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _key.currentState!.openDrawer();
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Image.asset(
+                    "assets/images/drawer.png",
+                    height: 60,
+                    width: 30,
+                  ),
+                ),
+              )
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Welcome to ${configs.value['shopName']}",
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(
+                  "Good Food.\nFast Delivery.",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontFamily: GoogleFonts.arvo().fontFamily,
+                    fontSize: 30,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          StreamBuilder<QuerySnapshot>(
+            stream: cloudDatabase.itemsCollection
+                .snapshots(includeMetadataChanges: true),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data != null) {
+                  List<QueryDocumentSnapshot> list = snapshot.data!.docs;
+
+                  return _getGridView(list);
+                }
+              }
+              return Center(
+                child: Image.asset(
+                  "assets/images/loading.gif",
+                  height: 100,
+                  width: 100,
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

@@ -45,38 +45,42 @@ class AddItemPageState extends State<AddItemPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Colors.black,
-        onPressed: () async {
-          String itemId = const Uuid().v1();
-
-          String url =
-              await storageManager.uploadItemImage(itemId, File(imageUrl));
-
-          await cloudDatabase.addItem(
-            ShopItem(
-              price: price,
-              description: description,
-              itemId: const Uuid().v1(),
-              itemName: name,
-              image: url,
-              listedAt: DateTime.now(),
-            ),
-          );
-          Navigator.pop(context);
-        },
-        label: Row(
-          children: const [
-            Text("Continue"),
-            SizedBox(width: 5),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-            ),
-          ],
-        ),
-      ),
+      floatingActionButton: _getFloatingActionButton(context),
       body: _getBody(),
+    );
+  }
+
+  FloatingActionButton _getFloatingActionButton(BuildContext context) {
+    return FloatingActionButton.extended(
+      backgroundColor: Colors.black,
+      onPressed: () async {
+        String itemId = const Uuid().v1();
+
+        String url =
+            await storageManager.uploadItemImage(itemId, File(imageUrl));
+
+        await cloudDatabase.addItem(
+          ShopItem(
+            price: price,
+            description: description,
+            itemId: const Uuid().v1(),
+            itemName: name,
+            image: url,
+            listedAt: DateTime.now(),
+          ),
+        );
+        Navigator.pop(context);
+      },
+      label: Row(
+        children: const [
+          Text("Continue"),
+          SizedBox(width: 5),
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 14,
+          ),
+        ],
+      ),
     );
   }
 

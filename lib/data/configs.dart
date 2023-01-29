@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 
 ValueNotifier<Map> configs = ValueNotifier<Map>({});
 
-Future<Map<String, dynamic>> getMockData() async {
+Future<Map<String, dynamic>> getConfigsData() async {
   Map<String, dynamic> data = {};
   try {
     final String jsonString =
@@ -17,6 +17,7 @@ Future<Map<String, dynamic>> getMockData() async {
     }
   } catch (e) {
     debugPrint("Ensure that you have filled your details in configs.json$e");
+    throw Exception("No configs.json file found");
   }
 
   return data;

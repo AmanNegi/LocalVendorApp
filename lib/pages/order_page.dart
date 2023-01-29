@@ -27,23 +27,7 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          "Your Orders",
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
+      appBar: _getAppBar(context),
       body: StreamBuilder<DocumentSnapshot>(
         stream:
             cloudDatabase.userCollection.doc(appData.value.userId).snapshots(),
@@ -142,6 +126,26 @@ class _OrderPageState extends State<OrderPage> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  AppBar _getAppBar(BuildContext context) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        icon: const Icon(
+          Icons.arrow_back_ios,
+          color: Colors.black,
+        ),
+        onPressed: () => Navigator.pop(context),
+      ),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+      title: const Text(
+        "Your Orders",
+        style: TextStyle(color: Colors.black),
       ),
     );
   }

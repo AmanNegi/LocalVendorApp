@@ -31,23 +31,7 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          "Your cart",
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
+      appBar: _getAppBar(context),
       body: StreamBuilder<DocumentSnapshot>(
         stream:
             cloudDatabase.userCollection.doc(appData.value.userId).snapshots(),
@@ -71,33 +55,7 @@ class _CartPageState extends State<CartPage> {
                 total = total + (item.amount * item.item.price);
               }
 
-              return Stack(
-                children: [
-                  Positioned.fill(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.only(
-                        top: 10.0,
-                        bottom: 0.15 * getHeight(context),
-                      ),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          return CartItemWidget(
-                            item: data[index],
-                            updateAmount: (e) {
-                              // data[index].amount = e;
-                              // setState(() {});
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  _getBottomBar(data),
-                ],
-              );
+              return _getBody(context, data);
             }
           }
           return Center(
@@ -108,6 +66,53 @@ class _CartPageState extends State<CartPage> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Stack _getBody(BuildContext context, List<CartItem> data) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(
+              top: 10.0,
+              bottom: 0.15 * getHeight(context),
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                return CartItemWidget(
+                  item: data[index],
+                  updateAmount: (e) {},
+                );
+              },
+            ),
+          ),
+        ),
+        _getBottomBar(data),
+      ],
+    );
+  }
+
+  AppBar _getAppBar(BuildContext context) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        icon: const Icon(
+          Icons.arrow_back_ios,
+          color: Colors.black,
+        ),
+        onPressed: () => Navigator.pop(context),
+      ),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+      title: const Text(
+        "Your cart",
+        style: TextStyle(color: Colors.black),
       ),
     );
   }

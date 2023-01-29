@@ -12,7 +12,7 @@ import 'package:local_vendor_app/secrets.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await sharedPrefsHelper.getUserFromDevice();
-  configs.value = await getMockData();
+  configs.value = await getConfigsData();
 
   if (kIsWeb) {
     await Firebase.initializeApp(

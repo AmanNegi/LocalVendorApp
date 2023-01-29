@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:local_vendor_app/data/configs.dart';
 import 'package:local_vendor_app/globals.dart';
 
@@ -40,7 +39,7 @@ class AboutUsDialog extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Text(configs.value["shopDescription"]),
             ),
             const SizedBox(height: 10),

@@ -10,6 +10,7 @@ import 'package:local_vendor_app/models/shop_item.dart';
 import 'package:local_vendor_app/models/shop_user.dart';
 import 'package:local_vendor_app/models/user_order.dart';
 
+// TODO: Create another classes to split code
 class CloudDataBase {
   final FirebaseFirestore globalInstance = FirebaseFirestore.instance;
 
@@ -51,7 +52,6 @@ class CloudDataBase {
 
     return user;
   }
-
 
 // Items Related Functions
   Future<bool> addItem(ShopItem item) async {
