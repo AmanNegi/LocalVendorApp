@@ -58,63 +58,66 @@ class _CartItemWidgetState extends State<CartItemWidget> {
             ),
           ),
           SizedBox(width: 0.025 * getWidth(context)),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.item.item.itemName,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+          SizedBox(
+            width: 0.3 * getWidth(context),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.item.item.itemName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 2),
-              Container(
-                height: 0.05 * getHeight(context),
-                width: 0.25 * getWidth(context),
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      child: const Icon(Icons.remove),
-                      onTap: () async {
-                        if (amount > 0) {
-                          amount--;
-                          setState(() {});
+                const SizedBox(height: 2),
+                Container(
+                  height: 0.05 * getHeight(context),
+                  width: 0.25 * getWidth(context),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        child: const Icon(Icons.remove),
+                        onTap: () async {
+                          if (amount > 0) {
+                            amount--;
+                            setState(() {});
+                            await cloudDatabase.addItemToCart(
+                              CartItem(
+                                amount: amount,
+                                item: widget.item.item,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      Text("$amount"),
+                      GestureDetector(
+                        child: const Icon(Icons.add),
+                        onTap: () async {
+                          amount++;
                           await cloudDatabase.addItemToCart(
                             CartItem(
                               amount: amount,
                               item: widget.item.item,
                             ),
                           );
-                        }
-                      },
-                    ),
-                    Text("$amount"),
-                    GestureDetector(
-                      child: const Icon(Icons.add),
-                      onTap: () async {
-                        amount++;
-                        await cloudDatabase.addItemToCart(
-                          CartItem(
-                            amount: amount,
-                            item: widget.item.item,
-                          ),
-                        );
-                        setState(() {});
-                      },
-                    ),
-                  ],
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const Spacer(),
           Text(

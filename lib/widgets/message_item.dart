@@ -25,7 +25,7 @@ class MessageItem extends StatelessWidget {
                 : _getReceivedMessageWidget(context, isOwnerMessage);
           }
         }
-        return Container();
+        return const CircularProgressIndicator();
       },
     );
     // return _getSelfMessageWidget() : _getReceivedMessageWidget();

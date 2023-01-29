@@ -107,7 +107,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: 0.45 * getWidth(context),
+                              width: 0.6 * getWidth(context),
                               child: Text(
                                 item.itemName,
                                 style: const TextStyle(

@@ -45,6 +45,7 @@ dependencies:
   material_design_icons_flutter: ^6.0.7096
   qr_flutter: ^4.0.0
   shared_preferences: ^2.0.17
+  url_launcher: ^6.1.8
   uuid: ^3.0.7
 
 dev_dependencies:

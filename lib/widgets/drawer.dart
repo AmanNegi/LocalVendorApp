@@ -13,6 +13,7 @@ import 'package:local_vendor_app/pages/order_page.dart';
 import 'package:local_vendor_app/pages/qr_page.dart';
 import 'package:local_vendor_app/widgets/about_us.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({Key? key}) : super(key: key);
@@ -135,24 +136,30 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 context: context, builder: (context) => const AboutUsDialog());
           }),
           const Spacer(),
-          Container(
-            height: 0.075 * getHeight(context),
-            color: Colors.black,
-            child: Center(
-                child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text(
-                  "Interested in Codebase?",
-                  style: TextStyle(color: Colors.white),
-                ),
-                SizedBox(width: 10),
-                Icon(
-                  MdiIcons.github,
-                  color: Colors.white,
-                ),
-              ],
-            )),
+          GestureDetector(
+            onTap: () {
+              launchUrl(Uri.parse(
+                  "https://www.github.com/amannegi/local_vendor_app"));
+            },
+            child: Container(
+              height: 0.075 * getHeight(context),
+              color: Colors.black,
+              child: Center(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    "Interested in Codebase?",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(width: 10),
+                  Icon(
+                    MdiIcons.github,
+                    color: Colors.white,
+                  ),
+                ],
+              )),
+            ),
           ),
         ],
       ),

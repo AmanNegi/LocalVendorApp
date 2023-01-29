@@ -1,16 +1,18 @@
-# local_vendor_app
 
-A new Flutter project.
 
-## Getting Started
+# Simply Create An App For Your Shop
 
-This project is a starting point for a Flutter application.
+1. Edit configs.json:
+``` json
+{
+  "shopName": "Jayara's Shop",
+  "shopDescription": "Get Awesome Food Delivered to your home. Book your tables at the comfort of your house.",
+  "shopTagLine": "Good Food.\nFast Delivery",
+  "ownerEmail": "asterjoules@gmail.com",
+  "address": "Dehradun, Uttarakhand",
+  "apkAddress": "https://www.google.com"
+}
+```
+2. Create A Firebase Project and modify `google_services.json`.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Unable to make these changes? Simply *raise an issue* [here](https://github.com/AmanNegi/local_vendor_app/issues), and we will do the rest 😄
